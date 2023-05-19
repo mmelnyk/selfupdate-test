@@ -6,6 +6,9 @@ jobs:
   build:
     name: Build and Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
     steps:
     - name: Install Go
       uses: actions/setup-go@v4
