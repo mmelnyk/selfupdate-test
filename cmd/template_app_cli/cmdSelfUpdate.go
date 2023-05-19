@@ -8,8 +8,8 @@ import (
 )
 
 var selfupdateCmd = &cobra.Command{
-	Use:   "selfupdate",
-	Short: "SelfUpdate operation",
+	Use:   "self-update",
+	Short: "Self Update operation",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Usage()
