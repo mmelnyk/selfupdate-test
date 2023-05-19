@@ -1,0 +1,32 @@
+# Project parameters
+
+# Golang module name
+GOMODULE = go.melnyk.org/selfupdate-test
+
+# Section with settings - uncomment required lines
+# Support and build docker containers
+#BUILD_DOCKER=yes
+# Support multiplatform builds
+BUILD_MULTIPLATFORM=yes
+
+# Other configuration
+
+# List of required multiplatform builds
+BUILDS=\
+	darwin-amd64  \
+	darwin-arm64  \
+	linux-amd64   \
+	windows-amd64 \
+
+# List of directories with binaries code
+BINARIES = \
+	./cmd/template_app \
+	./cmd/template_app_cli
+
+# Docker section
+# Docker registry host name
+DOCKER_REGISTRY=localhost
+
+# Mapping docker files to required docker images (multi-line format = <Dockerfile>~<image-name>)
+DOCKER_IMAGES= \
+	Dockerfile~template_app

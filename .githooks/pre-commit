@@ -25,7 +25,7 @@ git diff --cached --name-status | while read st file; do
         if [ "$st" == 'D' ]; then continue; fi
         # do a check only on the go files
         if [[ "$file" =~ ".go" ]]; then
-		staticcheck $file
+		staticcheck ./$(dirname $file)/...
         fi
 done
 
