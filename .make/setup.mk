@@ -13,6 +13,7 @@ GOBUILDOUT=-o bin/${@:build/./cmd/%=%}$(BINARY_EXT)
 GOFMT=$(GOCMD) fmt
 GOSTATICCHECK=staticcheck
 GOIMPORTS=goimports
+MSIGN=msign
 
 GOOUTDIR=bin
 

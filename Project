@@ -11,6 +11,9 @@ BUILD_MULTIPLATFORM=yes
 
 # Other configuration
 
+# Sign binaries with MSIGN tool
+MSIGN_SIGNATURE=yes
+
 # List of required multiplatform builds
 BUILDS=\
 	darwin-amd64  \

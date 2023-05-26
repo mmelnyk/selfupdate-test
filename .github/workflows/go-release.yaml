@@ -2,12 +2,14 @@ on:
   release:
     types: [published]
 name: Golang Build and Upload Release Asset
+permissions:
+  contents: read # for checkout
 jobs:
   build:
     name: Build and Release
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # to be able to publish a GitHub release
     steps:
     - name: Install Go
       uses: actions/setup-go@v4
@@ -19,6 +21,7 @@ jobs:
       env:
         RELEASE: ${{ github.event.release.tag_name }}
         BUILDNUMBER: ${{ github.event.release.tag_name }}
+        MSIGN_PRIVATE: ${{ secrets.MSIGN_PRIVATE }}
       run: make buildmp
     - name: Upload Release Asset
       env:

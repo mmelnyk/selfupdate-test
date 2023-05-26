@@ -12,9 +12,12 @@ _bindir:
 	@mkdir -p $(GOOUTDIR)
 
 .PHONY=build build/%
-build: _bindir $(BINARIES:%=build/%) ## do project build
+build: tools.msign _bindir $(BINARIES:%=build/%) ## do project build
 build/%: prebuild
 	$(GOBUILD) $(GOBUILDOUT) ${@:build/%=%}
+ifeq ($(MSIGN_SIGNATURE),yes)
+	$(MSIGN) sign --to-file bin/${@:build/./cmd/%=%}$(BINARY_EXT)
+endif
 
 .PHONY=test
 test: _bindir prebuild  ## run unit tests with code coverage info
@@ -44,6 +47,11 @@ clean: $(BINARIES:./cmd/%=clean/%) ## clean up files
 
 clean/%:
 	rm -f ${@:clean/%=$(GOOUTDIR)/%}$(BINARY_EXT)
+	rm -f ${@:clean/%=$(GOOUTDIR)/%}$(BINARY_EXT).msign
+
+ifeq ($(BUILD_MULTIPLATFORM),yes)
+clean: cleanmp
+endif
 
 .PHONY=format
 format: ## format go code (via gofmt)
