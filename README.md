@@ -9,7 +9,7 @@ the [code of conduct](CODE_OF_CONDUCT.md).
 
 [![Contributor Covenant][covenant-img]](CODE_OF_CONDUCT.md)
 
-[covenant-img]: https://img.shields.io/badge/contributor%20covenant-v1.4%20adopted-ff69b4.svg
+[covenant-img]: https://img.shields.io/badge/contributor%20covenant-v2.1%20adopted-ff69b4.svg
 [license-img]: https://img.shields.io/badge/license-MIT-blue.svg
 [license]: LICENSE
 [action-img]: ../../workflows/Test/badge.svg
