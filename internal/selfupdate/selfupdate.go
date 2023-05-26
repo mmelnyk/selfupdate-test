@@ -38,7 +38,7 @@ func (r Release) String() string {
 
 const (
 	githubAPITimeout        = 30 * time.Second
-	gitRegex                = `^(https?|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/(.+).git$`
+	gitRegex                = `^(https?|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/([^\/\.:]+)(|\.git)$`
 	githubDomain            = "github.com"
 	githubReleaseFormat     = "https://api.github.com/repos/%s/%s/releases/latest"
 	githubAssetFormat       = "https://api.github.com/repos/%s/%s/releases/assets/%d"
@@ -57,7 +57,7 @@ type githubError struct {
 func githubLatestRelease(ctx context.Context, git string) (Release, error) {
 	re := regexp.MustCompile(gitRegex)
 	matches := re.FindStringSubmatch(git)
-	if len(matches) != 6 {
+	if len(matches) < 6 {
 		return Release{}, fmt.Errorf("invalid GitHub URL %q", git)
 	}
 
