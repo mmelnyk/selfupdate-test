@@ -21,12 +21,11 @@ var selfupdateCheckCmd = &cobra.Command{
 	Short: "Check available update",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("Current version:   ", buildnumber)
 		latest, err := selfupdate.GetLatestVersion(giturl)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("Available version: ", latest)
 		}
-		//fmt.Println("Current version: ", version)
-		fmt.Println("Available version: ", latest)
 	},
 }
 
