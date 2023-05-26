@@ -20,6 +20,7 @@ func showVersion() {
 	fmt.Println(" Git hash: ", githash)
 	fmt.Println(" Build time: ", buildstamp)
 	fmt.Println(" Build number: ", buildnumber)
+	fmt.Println(" Source (git): ", giturl)
 	fmt.Println(" Platform:", runtime.GOOS, "/", runtime.GOARCH)
 	if bi, ok := debug.ReadBuildInfo(); ok {
 		fmt.Println(" Go version:", bi.GoVersion)
