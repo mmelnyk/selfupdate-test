@@ -7,6 +7,7 @@ import (
 )
 
 var (
+	//lint:file-ignore U1000 Ignore all unused code
 	buildstamp  = "not set"
 	buildnumber = "not set"
 	giturl      = "not set"
@@ -15,7 +16,6 @@ var (
 
 func showVersion() {
 	// fmt.Println(appname)
-	_ = giturl
 
 	fmt.Println(" Git hash: ", githash)
 	fmt.Println(" Build time: ", buildstamp)

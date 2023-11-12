@@ -3,7 +3,8 @@ module go.melnyk.org/selfupdate-test
 go 1.19
 
 require (
-	github.com/spf13/cobra v1.7.0
+	github.com/m-sign/msign v0.0.0-20230204225211-70543415826e
+	github.com/spf13/cobra v1.8.0
 	go.melnyk.org/mlog v1.0.0
 	gopkg.in/yaml.v3 v3.0.1
 )

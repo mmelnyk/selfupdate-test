@@ -9,8 +9,16 @@ build.go/%: export GOOS = $(word 2,$(subst -, ,$*))
 build.go/%: export GOARCH = $(word 3,$(subst -, ,$(subst ., ,$*)))
 build.go/%: BINARY_EXT = $(if $(filter windows, $(word 2,$(subst -, ,$*))),.exe,$(EMPTY))
 build.go/%: prebuild
+ifeq ($(FEATURE_SELF_UPDATE),yes)
+ifndef MSIGN_PUBLIC
+	$(error MSIGN_PUBLIC is undefined)
+endif
+endif
 	$(GOBUILD) $(GOBUILDOUTMP) ./cmd/$(BIN)
 ifeq ($(MSIGN_SIGNATURE),yes)
+ifndef MSIGN_PRIVATE
+	$(error MSIGN_PRIVATE is undefined)
+endif
 	$(MSIGN) sign --to-file bin/${@:build.go/%=%}$(BINARY_EXT)
 endif
 

@@ -1,3 +1,6 @@
+//go:build selfupdate
+// +build selfupdate
+
 package main
 
 import (
@@ -17,26 +20,28 @@ var selfupdateCmd = &cobra.Command{
 }
 
 var selfupdateCheckCmd = &cobra.Command{
-	Use:   "check",
-	Short: "Check available update",
-	Long:  ``,
-	Run: func(cmd *cobra.Command, args []string) {
+	Use:          "check",
+	Short:        "Check available update",
+	Long:         ``,
+	SilenceUsage: true,
+	RunE: func(cmd *cobra.Command, args []string) error {
 		fmt.Println("Current version:   ", buildnumber)
 		latest, err := selfupdate.GetLatestVersion(giturl)
 		if err == nil {
 			fmt.Println("Available version: ", latest)
-		} else {
-			fmt.Println("Error: ", err)
 		}
+		return err
 	},
 }
 
 var selfupdateDownloadCmd = &cobra.Command{
-	Use:   "download",
-	Short: "Download update",
-	Long:  ``,
-	Run: func(cmd *cobra.Command, args []string) {
-
+	Use:          "download",
+	Short:        "Download update",
+	Long:         ``,
+	SilenceUsage: true,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		err := selfupdate.DownloadLatestVersion(giturl, buildnumber)
+		return err
 	},
 }
 

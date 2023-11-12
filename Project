@@ -11,9 +11,6 @@ BUILD_MULTIPLATFORM=yes
 
 # Other configuration
 
-# Sign binaries with MSIGN tool
-MSIGN_SIGNATURE=yes
-
 # List of required multiplatform builds
 BUILDS=\
 	darwin-amd64  \
@@ -25,6 +22,14 @@ BUILDS=\
 BINARIES = \
 	./cmd/template_app \
 	./cmd/template_app_cli
+
+# Sign binaries with MSIGN tool
+MSIGN_SIGNATURE=yes
+
+# Features section
+# Enable binary self-update
+FEATURE_SHOW_VERSION=yes
+FEATURE_SELF_UPDATE=yes
 
 # Docker section
 # Docker registry host name

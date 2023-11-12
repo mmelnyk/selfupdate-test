@@ -6,8 +6,9 @@ GOTEST=$(GOVARS) $(GOCMD) test
 GOTOOL=$(GOCMD) tool
 GOVET=$(GOCMD) vet
 GOGET=$(GOVARS) $(GOCMD) get
-GOBUILDOPT=-a -ldflags "-X main.buildnumber=$(BUILDNUMBER) -X main.giturl=$(GITURL) -X main.githash=$(subst $(SPACE),$(UNDERSCORE),$(GITHASH)) -X main.buildstamp=$(TIMESTAMP)"
-GOBUILD=$(GOVARS) $(GOCMD) build $(GOBUILDOPT)
+GOLDGLAGS=-X main.buildnumber=$(BUILDNUMBER) -X main.giturl=$(GITURL) -X main.githash=$(subst $(SPACE),$(UNDERSCORE),$(GITHASH)) -X main.buildstamp=$(TIMESTAMP)
+GOBUILDOPT=-a -ldflags "$(GOLDGLAGS) $(GOLDFLAGSEXTRA)"
+GOBUILD=$(GOVARS) $(GOCMD) build $(GOTAGS) $(GOBUILDOPT)
 GOBUILDOUT=-o bin/${@:build/./cmd/%=%}$(BINARY_EXT)
 
 GOFMT=$(GOCMD) fmt
@@ -23,6 +24,17 @@ TMPLMARKER=.go-layout
 UNDERSCORE:= _
 EMPTY:=
 SPACE:= $(EMPTY) $(EMPTY)
+
+ifeq ($(FEATURE_SHOW_VERSION),yes)
+	GOTAGS := $(GOTAGS) -tags showversion
+endif
+
+ifeq ($(FEATURE_SELF_UPDATE),yes)
+	GOTAGS := $(GOTAGS) -tags selfupdate
+	ifeq ($(MSIGN_SIGNATURE),yes)
+		GOLDFLAGSEXTRA := $(GOLDFLAGSEXTRA) -X $(GOMODULE)/internal/selfupdate.msignPublic=$(MSIGN_PUBLIC)
+	endif
+endif
 
 ifeq ($(OS),Windows_NT)
     uname := Windows
