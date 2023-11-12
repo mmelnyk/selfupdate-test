@@ -22,7 +22,7 @@ jobs:
         RELEASE: ${{ github.event.release.tag_name }}
         BUILDNUMBER: ${{ github.event.release.tag_name }}
         MSIGN_PRIVATE: ${{ secrets.MSIGN_PRIVATE }}
-        MSIGN_PUBLIC: $${{ vars.MSIGN_PUBLIC }}
+        MSIGN_PUBLIC: ${{ vars.MSIGN_PUBLIC }}
       run: make buildmp
     - name: Upload Release Asset
       env:
