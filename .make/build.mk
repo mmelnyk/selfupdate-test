@@ -15,13 +15,13 @@ _bindir:
 build: tools.msign _bindir $(BINARIES:%=build/%) ## do project build
 build/%: prebuild
 ifeq ($(FEATURE_SELF_UPDATE),yes)
-ifndef MSIGN_PUBLIC
+ifeq ($(MSIGN_PUBLIC),)
 	$(error MSIGN_PUBLIC is undefined)
 endif
 endif
 	$(GOBUILD) $(GOBUILDOUT) ${@:build/%=%}
 ifeq ($(MSIGN_SIGNATURE),yes)
-ifndef MSIGN_PRIVATE
+ifeq ($(MSIGN_PRIVATE),)
 	$(error MSIGN_PRIVATE is undefined)
 endif
 	$(MSIGN) sign --to-file bin/${@:build/./cmd/%=%}$(BINARY_EXT)
