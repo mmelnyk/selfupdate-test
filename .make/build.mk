@@ -11,19 +11,23 @@ prebuild:
 _bindir:
 	@mkdir -p $(GOOUTDIR)
 
-.PHONY=build build/%
-build: tools.msign _bindir $(BINARIES:%=build/%) ## do project build
-build/%: prebuild
+_envcheck:
 ifeq ($(FEATURE_SELF_UPDATE),yes)
 ifeq ($(MSIGN_PUBLIC),)
 	$(error MSIGN_PUBLIC is undefined)
 endif
 endif
-	$(GOBUILD) $(GOBUILDOUT) ${@:build/%=%}
 ifeq ($(MSIGN_SIGNATURE),yes)
 ifeq ($(MSIGN_PRIVATE),)
 	$(error MSIGN_PRIVATE is undefined)
 endif
+endif
+
+.PHONY=build build/%
+build: tools.msign _envcheck _bindir $(BINARIES:%=build/%) ## do project build
+build/%: prebuild
+	$(GOBUILD) $(GOBUILDOUT) ${@:build/%=%}
+ifeq ($(MSIGN_SIGNATURE),yes)
 	$(MSIGN) sign --to-file bin/${@:build/./cmd/%=%}$(BINARY_EXT)
 endif
 

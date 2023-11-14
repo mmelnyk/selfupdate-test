@@ -15,7 +15,6 @@ import (
 	"path"
 	"path/filepath"
 	"regexp"
-	"runtime"
 	"strings"
 	"time"
 
@@ -201,7 +200,7 @@ func GetLatestVersion(giturl string) (string, error) {
 }
 
 // DownloadLatestVersion downloads the latest version of released binary on GitHub.
-func DownloadLatestVersion(giturl string, currentRelease string) error {
+func DownloadLatestVersion(giturl string, binary string, currentRelease string) error {
 
 	// 1. Get current binary name and path
 	currentBinary, err := os.Executable()
@@ -213,8 +212,6 @@ func DownloadLatestVersion(giturl string, currentRelease string) error {
 	if unlink, err := filepath.EvalSymlinks(currentBinary); err == nil {
 		currentBinary = unlink
 	}
-
-	justFile := path.Base(currentBinary)
 
 	// 2. Get latest version of released assets on GitHub
 	release, err := githubLatestRelease(context.Background(), giturl)
@@ -230,31 +227,30 @@ func DownloadLatestVersion(giturl string, currentRelease string) error {
 	fmt.Printf("Update to latest release: %v\n", release.TagName)
 
 	// 3. Find binary and sign assets for current binary/OS/ARCH
-	remoteBinary := fmt.Sprintf("%s-%s-%s", justFile, runtime.GOOS, runtime.GOARCH)
-	remoteBinarySign := fmt.Sprintf("%s.msign", remoteBinary)
+	binarySign := fmt.Sprintf("%s.msign", binary)
 
 	var binaryAsset Asset
 	var binarySignAsset Asset
 
 	for _, asset := range release.Assets {
-		if asset.Name == remoteBinary {
+		if asset.Name == binary {
 			binaryAsset = asset
 		}
-		if asset.Name == remoteBinarySign {
+		if asset.Name == binarySign {
 			binarySignAsset = asset
 		}
 	}
 
 	if binaryAsset.Name == "" {
-		return fmt.Errorf("binary asset %q not found", remoteBinary)
+		return fmt.Errorf("binary asset %q not found", binary)
 	}
 
 	if binarySignAsset.Name == "" {
-		return fmt.Errorf("binary sign asset %q not found", remoteBinarySign)
+		return fmt.Errorf("binary sign asset %q not found", binarySign)
 	}
 
 	// 4. Download binary and sign assets
-	fmt.Printf("Downloading %s...", binaryAsset.Name)
+	fmt.Printf("Downloading %s... ", binaryAsset.Name)
 	binaryData, err := githubDownloadAsset(context.Background(), binaryAsset)
 	if err != nil {
 		fmt.Println("failed")
@@ -262,7 +258,7 @@ func DownloadLatestVersion(giturl string, currentRelease string) error {
 	}
 	fmt.Println("done")
 
-	fmt.Printf("Downloading %s...", binarySignAsset.Name)
+	fmt.Printf("Downloading %s... ", binarySignAsset.Name)
 	binarySignData, err := githubDownloadAsset(context.Background(), binarySignAsset)
 	if err != nil {
 		fmt.Println("failed")
@@ -271,7 +267,7 @@ func DownloadLatestVersion(giturl string, currentRelease string) error {
 	fmt.Println("done")
 
 	// 5. Verify signature
-	fmt.Printf("Verifying %s...", binaryAsset.Name)
+	fmt.Printf("Verifying %s... ", binaryAsset.Name)
 
 	pub, err := msign.ImportPublicKey(strings.NewReader(msignPublic))
 	if err != nil {
@@ -302,7 +298,7 @@ func DownloadLatestVersion(giturl string, currentRelease string) error {
 	// 6.1. Save current binary to new name
 
 	//create new file
-	fmt.Printf("Saving downloaded update...")
+	fmt.Printf("Saving downloaded update... ")
 	newBinary := currentBinary + ".new"
 	newBinaryFile, err := os.Create(newBinary)
 	if err != nil {
@@ -334,7 +330,7 @@ func DownloadLatestVersion(giturl string, currentRelease string) error {
 	fmt.Println("done")
 
 	// 6.2. Rename old binary to backup name
-	fmt.Printf("Updating...")
+	fmt.Printf("Updating... ")
 	err = os.Rename(currentBinary, currentBinary+".bak")
 	if err != nil {
 		fmt.Println("failed")

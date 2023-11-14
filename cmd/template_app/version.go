@@ -11,10 +11,12 @@ var (
 	buildnumber = "not set"
 	giturl      = "not set"
 	githash     = "not set"
+	binary      = "not set"
 )
 
 func showVersion() {
 	_ = giturl
+	_ = binary
 	fmt.Println(appname)
 	fmt.Println(" Git hash: ", githash)
 	fmt.Println(" Build time: ", buildstamp)

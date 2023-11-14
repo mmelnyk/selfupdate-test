@@ -12,6 +12,7 @@ var (
 	buildnumber = "not set"
 	giturl      = "not set"
 	githash     = "not set"
+	binary      = "not set"
 )
 
 func showVersion() {

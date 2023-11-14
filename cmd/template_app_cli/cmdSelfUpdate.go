@@ -40,7 +40,7 @@ var selfupdateDownloadCmd = &cobra.Command{
 	Long:         ``,
 	SilenceUsage: true,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		err := selfupdate.DownloadLatestVersion(giturl, buildnumber)
+		err := selfupdate.DownloadLatestVersion(giturl, binary, buildnumber)
 		return err
 	},
 }

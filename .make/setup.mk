@@ -6,10 +6,13 @@ GOTEST=$(GOVARS) $(GOCMD) test
 GOTOOL=$(GOCMD) tool
 GOVET=$(GOCMD) vet
 GOGET=$(GOVARS) $(GOCMD) get
-GOLDGLAGS=-X main.buildnumber=$(BUILDNUMBER) -X main.giturl=$(GITURL) -X main.githash=$(subst $(SPACE),$(UNDERSCORE),$(GITHASH)) -X main.buildstamp=$(TIMESTAMP)
+GOLDGLAGS=-X main.buildnumber=$(BUILDNUMBER) -X main.giturl=$(GITURL) -X main.binary=$(BINARY_OUT) -X main.githash=$(subst $(SPACE),$(UNDERSCORE),$(GITHASH)) -X main.buildstamp=$(TIMESTAMP)
 GOBUILDOPT=-a -ldflags "$(GOLDGLAGS) $(GOLDFLAGSEXTRA)"
 GOBUILD=$(GOVARS) $(GOCMD) build $(GOTAGS) $(GOBUILDOPT)
 GOBUILDOUT=-o bin/${@:build/./cmd/%=%}$(BINARY_EXT)
+
+BINARY_A = $(@:build.go/%=%)
+BINARY_OUT = $(BINARY_A:build/./cmd/%=%)$(BINARY_EXT)
 
 GOFMT=$(GOCMD) fmt
 GOSTATICCHECK=staticcheck
@@ -26,14 +29,18 @@ EMPTY:=
 SPACE:= $(EMPTY) $(EMPTY)
 
 ifeq ($(FEATURE_SHOW_VERSION),yes)
-	GOTAGS := $(GOTAGS) -tags showversion
+	GOTAGS := $(GOTAGS)showversion,
 endif
 
 ifeq ($(FEATURE_SELF_UPDATE),yes)
-	GOTAGS := $(GOTAGS) -tags selfupdate
+	GOTAGS := $(GOTAGS)selfupdate,
 	ifeq ($(MSIGN_SIGNATURE),yes)
 		GOLDFLAGSEXTRA := $(GOLDFLAGSEXTRA) -X $(GOMODULE)/internal/selfupdate.msignPublic=$(MSIGN_PUBLIC)
 	endif
+endif
+
+ifneq ($(GOTAGS),)
+	GOTAGS := -tags "$(GOTAGS)"
 endif
 
 ifeq ($(OS),Windows_NT)
